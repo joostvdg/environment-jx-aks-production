@@ -11,8 +11,8 @@ dependencies:
   version: v0.8.1
   repository: https://charts.jetstack.io
   alias: certmanager
-#- name: cloudbees-core
-#  version: 2.164.3.2
-#  repository: https://charts.cloudbees.com/public/cloudbees
-#  alias: cbcore
+- name: cloudbees-core
+  version: 2.164.3.2
+  repository: https://charts.cloudbees.com/public/cloudbees
+  alias: cbcore
 

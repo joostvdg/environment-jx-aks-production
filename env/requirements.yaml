@@ -7,10 +7,6 @@ dependencies:
   version: 2.3.89
   repository: http://chartmuseum.jenkins-x.io
   alias: cleanup
-- name: cert-manager
-  version: v0.8.1
-  repository: https://charts.jetstack.io
-  alias: certmanager
 - name: cloudbees-core
   version: 2.164.302
   repository: https://charts.cloudbees.com/public/cloudbees

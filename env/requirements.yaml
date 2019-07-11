@@ -12,6 +12,6 @@ dependencies:
   repository: https://charts.cloudbees.com/public/cloudbees
   alias: cbcore
 - name: opendj4
-  version: 0.1.0
+  version: 0.2.0
   repository: https://raw.githubusercontent.com/joostvdg/helm-repo/master/
   alias: ldap

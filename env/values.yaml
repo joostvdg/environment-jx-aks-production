@@ -1,6 +1,5 @@
 PipelineSecrets:
   DockerConfig: '{"auths":{"acctestaks1.azurecr.io":{"auth":"YWNjdGVzdGFrczE6Y05raFdrWVFGSGJFZWdHalpGanhPem01REhBYS8yT2w="}}}'
-    Enabled: false
 cleanup:
   Annotations:
     helm.sh/hook: pre-delete
@@ -23,23 +22,21 @@ expose:
     domain: aks.kearos.net
     exposer: Ingress
     http: "true"
-  enabled: false
-  #jenkins:
-  # Servers:
-  #  Global:
-  #    EnvVars:
-  #      TILLER_NAMESPACE: kube-system
+# jenkins:
+#  Servers:
+#    Global:
+#      EnvVars:
+#        TILLER_NAMESPACE: kube-system
   enabled: false
 prow: {}
+
 
 cbcore:
   nginx-ingress:
     Enabled: false
 
   OperationsCenter:
-    # Set the HostName for the Operation Center
-    HostName: 'cloudbees-core.aks.kearos.net'
-    # Setting ServiceType to ClusterIP creates ingress
+    HostName: 'cbcore.aks.kearos.net'
     ServiceType: ClusterIP
     CSRF:
       ProxyCompatibility: true
@@ -53,8 +50,6 @@ cbcore:
         nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
       tls:
-      ## Set this to true in order to enable TLS on the ingress record
         Enable: true
-        # Create a certificate kubernetes and use it here.
-        SecretName: tls-cloudbees-core-kearos-net
-        Host: cloudbees-core.aks.kearos.net
+        SecretName: tls-cbcore-aks-kearos-net
+        Host: cbcore.aks.kearos.net

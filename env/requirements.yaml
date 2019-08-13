@@ -15,3 +15,7 @@ dependencies:
   version: 0.2.0
   repository: https://raw.githubusercontent.com/joostvdg/helm-repo/master/
   alias: ldap
+- name: certmanager
+  version: 0.1.0
+  repository: https://raw.githubusercontent.com/joostvdg/helm-repo/master/
+  alias: certmanager

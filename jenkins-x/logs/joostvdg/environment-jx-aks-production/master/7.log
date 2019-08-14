@@ -1,0 +1,466 @@
+Step: step-credential-initializer-z4p6s:
+
+{"level":"warn","ts":1565803200.7042217,"logger":"fallback-logger","caller":"logging/config.go:69","msg":"Fetch GitHub commit ID from kodata failed: \"ref: refs/heads/master\" is not a valid GitHub commit ID"}
+{"level":"info","ts":1565803200.7049913,"logger":"fallback-logger","caller":"creds-init/main.go:40","msg":"Credentials initialized."}
+Step: step-working-dir-initializer-mrgzb:
+
+{"level":"warn","ts":1565803202.2798343,"logger":"fallback-logger","caller":"logging/config.go:69","msg":"Fetch GitHub commit ID from kodata failed: open /var/run/ko/HEAD: no such file or directory"}
+{"level":"info","ts":1565803202.2817855,"logger":"fallback-logger","caller":"bash/main.go:65","msg":"Successfully executed command \"mkdir -p /workspace/source /workspace/source/env\""}
+Step: step-place-tools:
+
+Step: step-git-source-********-environment-**-aks-pro-w8p9x:
+
+{"level":"warn","ts":1565803312.7711227,"logger":"fallback-logger","caller":"logging/config.go:69","msg":"Fetch GitHub commit ID from kodata failed: \"ref: refs/heads/master\" is not a valid GitHub commit ID"}
+{"level":"info","ts":1565803313.4176018,"logger":"fallback-logger","caller":"git/git.go:102","msg":"Successfully cloned https://github.com/********/environment-**-aks-production.git @ v0.0.19 in path /workspace/source"}
+Step: step-git-merge:
+
+WARNING: no SHAs to merge, falling back to initial cloned commit
+Step: step-setup-**-git-credentials:
+
+Generated Git credentials file /builder/home/git/credentials
+Step: step-build-helm-apply:
+
+Modified file /workspace/source/env/Chart.yaml to set the chart to version 7
+Copying the helm source directory /workspace/source/env to a temporary location for building and applying /tmp/**-helm-apply-655401823/env
+Applying helm chart at /tmp/**-helm-apply-655401823/env as release name ** to namespace **-production
+WARNING: failed to create system vault in namespace ** due to could not find the system vault name in namespace "**"
+verifying the helm requirements versions in dir: . using version stream URL:  and git ref: 
+Deleting and cloning the Jenkins X versions repo
+Cloning the Jenkins X versions repo https://github.com/jenkins-x/jenkins-x-versions.git with ref refs/heads/master to /builder/home/.**/jenkins-x-versions
+Ignoring templates/.gitignore
+Ignoring templates/certificate.yaml
+Ignoring templates/clusterissuer.yaml
+Wrote chart values.yaml /tmp/**-helm-apply-655401823/env/values.yaml generated from directory tree
+generated helm /tmp/**-helm-apply-655401823/env/values.yaml
+
+PipelineSecrets:
+  DockerConfig: '************************************************************************************************************'
+cbcore:
+  OperationsCenter:
+    CSRF:
+      ProxyCompatibility: true
+    HostName: cbcore.aks.kearos.net
+    Ingress:
+      Annotations:
+        certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+        kubernetes.io/ingress.class: nginx
+        kubernetes.io/tls-acme: "false"
+        nginx.ingress.kubernetes.io/app-root: https://$best_http_host/cjoc/teams-check/
+        nginx.ingress.kubernetes.io/proxy-body-size: 50m
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      tls:
+        Enable: true
+        Host: cbcore.aks.kearos.net
+        SecretName: tls-cbcore-aks-kearos-net
+    ServiceType: ClusterIP
+  nginx-ingress:
+    Enabled: false
+cleanup:
+  Annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-delete-policy: hook-succeeded
+  Args:
+  - --cleanup
+controllerbuild:
+  enabled: true
+controllerworkflow:
+  enabled: false
+dockerRegistry: acctestaks1.azurecr.io
+expose:
+  Annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded
+  Args:
+  - --v
+  - 4
+  config:
+    domain: aks.kearos.net
+    exposer: Ingress
+    http: "true"
+  enabled: false
+grafana:
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - disableDeletion: true
+        editable: true
+        folder: default
+        name: Default
+        options:
+          path: /var/lib/grafana/dashboards/default
+        orgId: 1
+        type: file
+  dashboards:
+    default:
+      Capacity:
+        datasource: Prometheus
+        gnetId: 5228
+        revision: 6
+      Costs:
+        datasource: Prometheus
+        gnetId: 8670
+        revision: 1
+      Costs-Pod:
+        datasource: Prometheus
+        gnetId: 6879
+        revision: 1
+      Deployments:
+        datasource: Prometheus
+        gnetId: 8588
+        revision: 1
+      Jenkins-OLD:
+        datasource: Prometheus
+        gnetId: 9964
+        revision: 1
+      Summary:
+        datasource: Prometheus
+        gnetId: 8685
+        revision: 1
+      Volumes:
+        datasource: Prometheus
+        gnetId: 6739
+        revision: 1
+  datasources: null
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - access: proxy
+      isDefault: true
+      name: Prometheus
+      type: prometheus
+      url: http://prometheus-server
+  ingress:
+    enabled: true
+    hosts:
+    - grafana.aks.kearos.net
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    enabled: true
+    size: 1Gi
+  resources:
+    limits:
+      cpu: 20m
+      memory: 50Mi
+    requests:
+      cpu: 5m
+      memory: 25Mi
+jenkins:
+  Servers:
+    Global:
+      EnvVars:
+        TILLER_NAMESPACE: kube-system
+  enabled: false
+prom:
+  alertmanager:
+    ingress:
+      annotations:
+        ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      enabled: true
+    resources:
+      limits:
+        cpu: 10m
+        memory: 20Mi
+      requests:
+        cpu: 5m
+        memory: 10Mi
+  alertmanagerFiles:
+    alertmanager.yml:
+      global: {}
+      receivers:
+      - name: default
+        slack_configs:
+        - api_url: https://hooks.slack.com/services/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
+          channel: '#notify'
+          send_resolved: true
+          text: '{{ .CommonAnnotations.description }} {{ .CommonLabels.app_kubernetes_io_instance}} '
+          title: '{{ .CommonAnnotations.summary }} '
+          title_link: http://my-prometheus.com/alerts
+          username: Alertmanager
+      route:
+        group_by:
+        - alertname
+        - app_kubernetes_io_instance
+        receiver: default
+  kubeStateMetrics:
+    resources:
+      limits:
+        cpu: 10m
+        memory: 50Mi
+      requests:
+        cpu: 5m
+        memory: 25Mi
+  nodeExporter:
+    resources:
+      limits:
+        cpu: 10m
+        memory: 20Mi
+      requests:
+        cpu: 5m
+        memory: 10Mi
+  pushgateway:
+    resources:
+      limits:
+        cpu: 10m
+        memory: 20Mi
+      requests:
+        cpu: 5m
+        memory: 10Mi
+  server:
+    ingress:
+      annotations:
+        ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      enabled: true
+    resources:
+      limits:
+        cpu: 100m
+        memory: 1000Mi
+      requests:
+        cpu: 10m
+        memory: 500Mi
+  serverFiles:
+    alerts:
+      groups:
+      - name: jobs
+        rules:
+        - alert: JenkinsTooManyJobsQueued
+          annotations:
+            description: '{{ $labels.app_kubernetes_io_instance }} has {{ $value }}
+              jobs stuck in the queue'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} too many jobs queued'
+          expr: sum(jenkins_queue_size_value) > 5
+          for: 1m
+          labels:
+            severity: notify
+        - alert: JenkinsTooManyJobsStuckInQueue
+          annotations:
+            description: ' {{ $labels.app_kubernetes_io_instance }} has {{ $value
+              }} jobs in queue'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} too many jobs queued'
+          expr: sum(jenkins_queue_stuck_value) by (app_kubernetes_io_instance) > 5
+          for: 1m
+          labels:
+            severity: notify
+        - alert: JenkinsWaitingTooMuchOnJobStart
+          annotations:
+            description: '{{ $labels.app_kubernetes_io_instance }} is waiting on average
+              {{ $value }} seconds to start a job'
+            summary: '{{ $labels.app_kubernetes_io_instance }} waits too long for
+              jobs'
+          expr: sum (jenkins_job_waiting_duration) by (app_kubernetes_io_instance)
+            > 0.05
+          for: 1m
+          labels:
+            severity: notify
+        - alert: JenkinsTooLowJobSuccessRate
+          annotations:
+            description: ' {{ $labels.app_kubernetes_io_instance }} instance has {{
+              $value }}% of jobs being successful'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} has a too low job
+              success rate'
+          expr: sum(jenkins_runs_success_total) by (app_kubernetes_io_instance) /
+            sum(jenkins_runs_total_total) by (app_kubernetes_io_instance) < 0.60
+          for: 1m
+          labels:
+            severity: notify
+      - name: uptime
+        rules:
+        - alert: JenkinsNewOrRestarted
+          annotations:
+            description: ' {{ $labels.app_kubernetes_io_instance }} has low uptime
+              and was either restarted or is a new instance (uptime: {{ $value }}
+              hours)'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} has low uptime'
+          expr: sum(vm_uptime_milliseconds) by (app_kubernetes_io_instance) / 3600000
+            < 2
+          for: 3m
+          labels:
+            severity: notify
+      - name: plugins
+        rules:
+        - alert: JenkinsTooManyPluginsNeedUpate
+          annotations:
+            description: ' {{ $labels.app_kubernetes_io_instance }} has {{ $value
+              }} plugins that require an update'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} too many plugins updates'
+          expr: sum(jenkins_plugins_withUpdate) by (app_kubernetes_io_instance) >
+            3
+          for: 1m
+          labels:
+            severity: notify
+      - name: jvm
+        rules:
+        - alert: JenkinsToManyOpenFiles
+          annotations:
+            description: ' {{ $labels.app_kubernetes_io_instance }} instance has used
+              {{ $value }} of available open files'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} has a to many open
+              files'
+          expr: sum(vm_file_descriptor_ratio) by (app_kubernetes_io_instance) > 0.040
+          for: 5m
+          labels:
+            severity: notify
+        - alert: JenkinsVMMemoryRationTooHigh
+          annotations:
+            description: '{{$labels.app_kubernetes_io_instance}} has a too high VM
+              memory ration'
+            summary: '{{$labels.app_kubernetes_io_instance}} too high memory ration'
+          expr: sum(vm_memory_heap_usage) by (app_kubernetes_io_instance) > 0.70
+          for: 3m
+          labels:
+            severity: notify
+        - alert: JenkinsTooManyPluginsNeedUpate
+          annotations:
+            description: '{{ $labels.instance }} has too low Garbage Collection throughput'
+            summary: '{{ $labels.instance }} too low GC throughput'
+          expr: 1 - sum(vm_gc_G1_Young_Generation_time)by (app_kubernetes_io_instance)  /  sum
+            (vm_uptime_milliseconds) by (app_kubernetes_io_instance) < 0.99
+          for: 30m
+          labels:
+            severity: notify
+      - name: web
+        rules:
+        - alert: JenkinsTooSlow
+          annotations:
+            description: '{{ $labels.app_kubernetes_io_instance }}  More then 1% of
+              requests are slower than 1s (request time: {{ $value }})'
+            summary: '{{ $labels.app_kubernetes_io_instance }} is too slow'
+          expr: sum(http_requests{quantile="0.99"} ) by (app_kubernetes_io_instance)
+            > 1
+          for: 3m
+          labels:
+            severity: notify
+        - alert: AppTooSlow
+          annotations:
+            description: ' {{ $labels.ingress }} - More then 5% of requests are slower
+              than 0.25s'
+            summary: Application - {{ $labels.ingress }} - is too slow
+          expr: sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{le="0.25"}[5m]))
+            by (ingress) / sum(rate(nginx_ingress_controller_request_duration_seconds_count[5m]))
+            by (ingress) < 0.95
+          for: 5m
+          labels:
+            severity: notify
+      - name: healthcheck
+        rules:
+        - alert: JenkinsHealthScoreToLow
+          annotations:
+            description: ' {{ $labels.app_kubernetes_io_instance }} a health score
+              lower than 100%'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} has a to low health
+              score'
+          expr: sum(jenkins_health_check_score) by (app_kubernetes_io_instance) <
+            1
+          for: 5m
+          labels:
+            severity: notify
+        - alert: JenkinsTooSlowHealthCheck
+          annotations:
+            description: ' {{ $labels.app_kubernetes_io_instance }} is responding
+              too slow to the regular health check'
+            summary: ' {{ $labels.app_kubernetes_io_instance }} responds too slow
+              to health check'
+          expr: sum(jenkins_health_check_duration{quantile="0.999"}) by (app_kubernetes_io_instance)
+            > 0.001
+          for: 1m
+          labels:
+            severity: notify
+      - name: nodes
+        rules:
+        - alert: JenkinsTooManyOfflineNodes
+          annotations:
+            description: '{{ $labels.app_kubernetes_io_instance }} has {{ $value }}
+              nodes that are offline for some time (5 minutes)'
+            summary: '{{ $labels.app_kubernetes_io_instance }} has a too many offline
+              nodes'
+          expr: sum(jenkins_node_offline_value) by (app_kubernetes_io_instance) >
+            3
+          for: 1m
+          labels:
+            severity: notify
+prow: {}
+
+Using values files: /tmp/**-helm-apply-655401823/env/values.yaml
+WARNING: No $CHART_REPOSITORY defined so using the default value of: http://jenkins-x-chartmuseum:8080
+Adding missing Helm repo: storage.googleapis.com https://storage.googleapis.com/chartmuseum.jenkins-x.io
+Successfully added Helm repository storage.googleapis.com.
+Adding missing Helm repo: jenkins-x-chartmuseum http://jenkins-x-chartmuseum:8080
+Successfully added Helm repository jenkins-x-chartmuseum.
+WARNING: No $CHART_REPOSITORY defined so using the default value of: http://jenkins-x-chartmuseum:8080
+Adding missing Helm repo: chartmuseum.jenkins-x.io http://chartmuseum.jenkins-x.io
+Successfully added Helm repository chartmuseum.jenkins-x.io.
+Adding missing Helm repo: charts.cloudbees.com https://charts.cloudbees.com/public/cloudbees
+Successfully added Helm repository charts.cloudbees.com.
+Adding missing Helm repo: raw.githubusercontent.com https://raw.githubusercontent.com/********/helm-repo/master/
+Successfully added Helm repository raw.githubusercontent.com.
+Applying Apps chart overrides
+Applying chart overrides
+error: upgrading helm chart '.': failed to run 'kubectl apply --recursive -f /tmp/helm-template-workdir-236395316/**/output/namespaces/**-production -l jenkins.io/chart-release=** --namespace **-production --wait --validate=false' command in directory '/tmp/**-helm-apply-655401823/env', output: 'configmap/cjoc-configure-jenkins-groovy configured
+ingress.extensions/cjoc configured
+configmap/jenkins-agent configured
+statefulset.apps/cjoc configured
+service/cjoc configured
+role.rbac.authorization.k8s.io/cjoc-agents configured
+role.rbac.authorization.k8s.io/cjoc-master-management configured
+rolebinding.rbac.authorization.k8s.io/cjoc-role-binding configured
+rolebinding.rbac.authorization.k8s.io/cjoc-master-role-binding configured
+serviceaccount/cjoc configured
+serviceaccount/jenkins configured
+role.rbac.authorization.k8s.io/cleanup configured
+rolebinding.rbac.authorization.k8s.io/cleanup configured
+serviceaccount/cleanup configured
+configmap/exposecontroller configured
+role.rbac.authorization.k8s.io/expose configured
+rolebinding.rbac.authorization.k8s.io/expose configured
+serviceaccount/expose configured
+clusterrole.rbac.authorization.k8s.io/**-grafana-clusterrole created
+clusterrolebinding.rbac.authorization.k8s.io/**-grafana-clusterrolebinding created
+configmap/**-grafana created
+configmap/**-grafana-dashboards-default created
+deployment.apps/**-grafana created
+ingress.extensions/**-grafana created
+podsecuritypolicy.extensions/**-grafana created
+persistentvolumeclaim/**-grafana created
+role.rbac.authorization.k8s.io/**-grafana created
+rolebinding.rbac.authorization.k8s.io/**-grafana created
+secret/**-grafana created
+service/**-grafana created
+serviceaccount/**-grafana created
+configmap/**-grafana-test created
+podsecuritypolicy.extensions/**-grafana-test created
+role.rbac.authorization.k8s.io/**-grafana-test created
+rolebinding.rbac.authorization.k8s.io/**-grafana-test created
+serviceaccount/**-grafana-test created
+deployment.apps/**-ldap configured
+service/**-ldap configured
+configmap/**-prom-alertmanager created
+deployment.extensions/**-prom-alertmanager created
+persistentvolumeclaim/**-prom-alertmanager created
+service/**-prom-alertmanager created
+serviceaccount/**-prom-alertmanager created
+clusterrole.rbac.authorization.k8s.io/**-prom-kube-state-metrics created
+clusterrolebinding.rbac.authorization.k8s.io/**-prom-kube-state-metrics created
+deployment.extensions/**-prom-kube-state-metrics created
+serviceaccount/**-prom-kube-state-metrics created
+service/**-prom-kube-state-metrics created
+daemonset.extensions/**-prom-node-exporter created
+service/**-prom-node-exporter created
+serviceaccount/**-prom-node-exporter created
+deployment.extensions/**-prom-pushgateway created
+service/**-prom-pushgateway created
+serviceaccount/**-prom-pushgateway created
+clusterrole.rbac.authorization.k8s.io/**-prom-server created
+clusterrolebinding.rbac.authorization.k8s.io/**-prom-server created
+configmap/**-prom-server created
+deployment.extensions/**-prom-server created
+persistentvolumeclaim/**-prom-server created
+service/**-prom-server created
+serviceaccount/**-prom-server created
+certificate.certmanager.k8s.io/cbcore.aks.kearos.net created
+clusterissuer.certmanager.k8s.io/letsencrypt-prod configured
+Error from server (Invalid): error when creating "/tmp/helm-template-workdir-236395316/**/output/namespaces/**-production/env/charts/prom/templates/part0-alertmanager-ingress.yaml": Ingress.extensions "**-prom-alertmanager" is invalid: spec: Invalid value: []extensions.IngressRule(nil): either `backend` or `rules` must be specified
+Error from server (Invalid): error when creating "/tmp/helm-template-workdir-236395316/**/output/namespaces/**-production/env/charts/prom/templates/part0-server-ingress.yaml": Ingress.extensions "**-prom-server" is invalid: spec: Invalid value: []extensions.IngressRule(nil): either `backend` or `rules` must be specified'

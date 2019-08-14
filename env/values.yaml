@@ -55,10 +55,7 @@ prow: {}
 prom:
   server:
     ingress:
-      enabled: true
-      annotations:
-        ingress.kubernetes.io/ssl-redirect: "false"
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      enabled: false
     resources:
       limits:
         cpu: 100m
@@ -68,10 +65,7 @@ prom:
         memory: 500Mi
   alertmanager:
     ingress:
-      enabled: true
-      annotations:
-        ingress.kubernetes.io/ssl-redirect: "false"
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      enabled: false
     resources:
       limits:
         cpu: 10m

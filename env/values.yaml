@@ -249,10 +249,7 @@ grafana:
     hosts:
       - grafana.aks.kearos.net
   persistence:
-    enabled: true
-    accessModes:
-    - ReadWriteOnce
-    size: 1Gi
+    enabled: false
   resources:
     limits:
       cpu: 20m
